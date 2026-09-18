@@ -1,0 +1,3 @@
+import {NextRequest,NextResponse} from "next/server";
+export async function GET(req:NextRequest){const q=req.nextUrl.searchParams;if(q.get("hub.verify_token")===process.env.WHATSAPP_VERIFY_TOKEN)return new NextResponse(q.get("hub.challenge")||"",{status:200});return new NextResponse("Token inválido",{status:403})}
+export async function POST(req:NextRequest){const payload=await req.json();/* TODO: validar assinatura, identificar número autorizado, persistir mensagem e criar evento conforme fluxo */console.log("WhatsApp webhook",JSON.stringify(payload));return NextResponse.json({received:true})}
