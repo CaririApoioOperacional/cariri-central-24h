@@ -1,1 +1,1 @@
-export default function Tecnico(){return <main><header><strong>CARIRI</strong><span> OPERACIONAL</span></header><section><p className="eyebrow">TÉCNICO EXTERNO</p><h1>Atendimentos</h1><div className="empty">Nenhum despacho atribuído.</div></section></main>}
+import TechnicianBoard from "./TechnicianBoard";export default function Tecnico(){return <main><header><strong>CARIRI</strong><span> OPERACIONAL</span></header><section><p className="eyebrow">TÉCNICO EXTERNO</p><h1>Meus atendimentos</h1><TechnicianBoard/></section></main>}
