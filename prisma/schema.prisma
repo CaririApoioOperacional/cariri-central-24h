@@ -124,6 +124,7 @@ model Evidence {
   sha256 String?
   mimeType String?
   size Int?
+  data Bytes?
   note String?
   latitude Float?
   longitude Float?
