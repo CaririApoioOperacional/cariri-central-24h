@@ -1,0 +1,1 @@
+import {NextResponse} from "next/server";import {session,logout} from "../../../../lib/auth";export async function GET(){const s=await session();return s?NextResponse.json(s):NextResponse.json({error:"Não autenticado"},{status:401})}export async function DELETE(){await logout();return NextResponse.json({ok:true})}
