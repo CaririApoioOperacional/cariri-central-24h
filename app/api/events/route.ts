@@ -1,0 +1,3 @@
+import {NextResponse} from "next/server";import {prisma} from "../../../lib/prisma";import {newProtocol} from "../../../lib/protocol";
+export async function GET(){return NextResponse.json(await prisma.event.findMany({include:{site:{include:{customer:true}}},orderBy:{createdAt:"desc"},take:100}))}
+export async function POST(req:Request){const b=await req.json();if(!b.siteId)return NextResponse.json({error:"Estabelecimento obrigatório"},{status:400});const event=await prisma.event.create({data:{protocol:newProtocol(),siteId:b.siteId,origin:b.origin||"OPERATOR",description:b.description||null}});return NextResponse.json(event,{status:201})}
