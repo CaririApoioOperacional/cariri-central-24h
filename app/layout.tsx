@@ -1,3 +1,1 @@
-import "./globals.css";
-export const metadata={title:"CARIRI CENTRAL 24h",description:"Central de Monitoramento"};
-export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="pt-BR"><body>{children}</body></html>}
+import "./globals.css";import PwaRegister from "./PwaRegister";export const metadata={title:"CARIRI CENTRAL 24h",description:"Central de Monitoramento",manifest:"/manifest.webmanifest",themeColor:"#090909"};export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="pt-BR"><body><PwaRegister/>{children}</body></html>}
