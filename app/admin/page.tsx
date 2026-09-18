@@ -1,0 +1,1 @@
+export default function Admin(){return <main><header><strong>CARIRI</strong><span> ADMINISTRAÇÃO</span></header><section><p className="eyebrow">CONFIGURAÇÃO</p><h1>Cadastros</h1><div className="cards"><span>Clientes</span><span>Estabelecimentos</span><span>Contatos WhatsApp</span><span>Técnicos</span></div></section></main>}
