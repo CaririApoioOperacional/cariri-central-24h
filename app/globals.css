@@ -2,3 +2,5 @@
 textarea,article select{background:#0d0d0d;color:#fff;border:1px solid #444;border-radius:8px;padding:12px;min-height:44px}textarea{min-height:100px;resize:vertical}article>button,.location{background:#e32222;color:#fff;border:0;border-radius:8px;padding:12px 18px;font-weight:700;cursor:pointer}
 
 .login{max-width:520px;margin:auto}.login form{display:grid;gap:12px}.login input{background:#151515;color:#fff;border:1px solid #444;border-radius:8px;padding:15px;font-size:16px}.login button{background:#e32222;color:#fff;border:0;border-radius:8px;padding:15px;font-weight:700;cursor:pointer}
+
+.new-event{margin:24px 0;border-color:#4a2020}.new-event form{display:grid;grid-template-columns:1.4fr 1fr;gap:10px}.new-event textarea{grid-column:1/-1}.new-event button{grid-column:1/-1;background:#e32222;color:#fff;border:0;border-radius:8px;padding:14px;font-weight:700;cursor:pointer}.new-event select{background:#0d0d0d;color:#fff;border:1px solid #444;border-radius:8px;padding:12px}@media(max-width:700px){.new-event form{grid-template-columns:1fr}.new-event textarea,.new-event button{grid-column:auto}}
