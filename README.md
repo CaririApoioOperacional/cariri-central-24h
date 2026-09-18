@@ -20,3 +20,10 @@ cp .env.example .env
 npx prisma generate
 npm run dev
 ```
+
+
+## Produção
+Requer PostgreSQL, HTTPS e volume persistente montado em `EVIDENCE_STORAGE_PATH`. Nunca versionar `.env` ou tokens do WhatsApp. No Railway, conecte um PostgreSQL e um Volume ao serviço antes de habilitar evidências em produção.
+
+## Segurança
+O modelo `StaffUser` foi reservado para autenticação e RBAC de ADMIN, CENTRAL, TECHNICIAN e SUPERVISOR. As telas internas ainda não devem ser expostas publicamente até a camada de sessão/autenticação estar ativa.
