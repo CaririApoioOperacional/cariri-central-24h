@@ -1,46 +1,11 @@
 generator client { provider = "prisma-client-js" }
 datasource db { provider = "postgresql" url = env("DATABASE_URL") }
-
 enum EventStatus { OPEN DISPATCHED EN_ROUTE ON_SITE COMPLETED CANCELLED }
 enum EventOrigin { ALARM CAMERA CUSTOMER OPERATOR INTEGRATION EQUIPMENT }
-
-model Customer {
- id String @id @default(cuid())
- name String
- active Boolean @default(true)
- sites Site[]
- contacts WhatsAppContact[]
- createdAt DateTime @default(now())
-}
-model Site {
- id String @id @default(cuid())
- name String
- address String?
- latitude Float?
- longitude Float?
- customerId String
- customer Customer @relation(fields:[customerId],references:[id])
- events Event[]
- contacts WhatsAppContact[]
-}
-model WhatsAppContact {
- id String @id @default(cuid())
- phone String @unique
- name String?
- authorized Boolean @default(true)
- customerId String
- siteId String?
- customer Customer @relation(fields:[customerId],references:[id])
- site Site? @relation(fields:[siteId],references:[id])
-}
-model Event {
- id String @id @default(cuid())
- protocol String @unique
- origin EventOrigin
- status EventStatus @default(OPEN)
- description String?
- siteId String
- site Site @relation(fields:[siteId],references:[id])
- createdAt DateTime @default(now())
- updatedAt DateTime @updatedAt
-}
+enum DispatchStatus { SENT ACCEPTED EN_ROUTE ON_SITE COMPLETED CANCELLED }
+model Customer { id String @id @default(cuid()) name String active Boolean @default(true) sites Site[] contacts WhatsAppContact[] createdAt DateTime @default(now()) }
+model Site { id String @id @default(cuid()) name String address String? latitude Float? longitude Float? customerId String customer Customer @relation(fields:[customerId],references:[id]) events Event[] contacts WhatsAppContact[] }
+model WhatsAppContact { id String @id @default(cuid()) phone String @unique name String? authorized Boolean @default(true) customerId String siteId String? customer Customer @relation(fields:[customerId],references:[id]) site Site? @relation(fields:[siteId],references:[id]) }
+model Event { id String @id @default(cuid()) protocol String @unique origin EventOrigin status EventStatus @default(OPEN) description String? siteId String site Site @relation(fields:[siteId],references:[id]) dispatches Dispatch[] createdAt DateTime @default(now()) updatedAt DateTime @updatedAt }
+model Technician { id String @id @default(cuid()) name String phone String? active Boolean @default(true) available Boolean @default(true) latitude Float? longitude Float? dispatches Dispatch[] createdAt DateTime @default(now()) }
+model Dispatch { id String @id @default(cuid()) eventId String technicianId String status DispatchStatus @default(SENT) event Event @relation(fields:[eventId],references:[id]) technician Technician @relation(fields:[technicianId],references:[id]) createdAt DateTime @default(now()) acceptedAt DateTime? arrivedAt DateTime? completedAt DateTime? }
