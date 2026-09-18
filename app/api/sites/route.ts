@@ -1,0 +1,2 @@
+import {NextResponse} from "next/server";import {prisma} from "../../../lib/prisma";
+export async function POST(req:Request){const b=await req.json();if(!b.name||!b.customerId)return NextResponse.json({error:"Nome e cliente obrigatórios"},{status:400});return NextResponse.json(await prisma.site.create({data:{name:b.name,address:b.address||null,customerId:b.customerId,latitude:b.latitude?Number(b.latitude):null,longitude:b.longitude?Number(b.longitude):null}}),{status:201})}
