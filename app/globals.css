@@ -26,3 +26,5 @@ header{gap:14px;min-width:0}header>strong{flex:0 0 auto}header>span{flex:0 1 aut
 .cep-row{display:grid;grid-template-columns:1fr auto;gap:8px}.cep-row .cep-button{min-width:120px;background:#17191f;border:1px solid #343740;box-shadow:none}@media(max-width:520px){.cep-row{grid-template-columns:1fr}.cep-row .cep-button{width:100%}}
 
 .route-link{display:inline-flex;align-self:flex-start;padding:9px 12px;border:1px solid #343740;border-radius:9px;color:#fff;text-decoration:none;font-size:10px;font-weight:900;letter-spacing:.6px;background:#15171c}.route-link:hover{border-color:var(--red)}button:disabled{opacity:.4;cursor:not-allowed;filter:none!important;transform:none!important}
+
+.cep-number-row{grid-template-columns:minmax(120px,1fr) minmax(130px,.7fr) auto}.cep-number-row .cep-button{white-space:nowrap}@media(max-width:700px){.cep-number-row{grid-template-columns:1fr 1fr}.cep-number-row .cep-button{grid-column:1/-1}}
