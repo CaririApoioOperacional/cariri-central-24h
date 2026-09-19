@@ -22,3 +22,5 @@ header{gap:14px;min-width:0}header>strong{flex:0 0 auto}header>span{flex:0 1 aut
 .tech-admin-list{margin-top:18px}.tech-admin-list article{padding:14px;gap:5px}.tech-admin-list article span{font-size:12px;color:#c5c8cf}.tech-admin-list article small{margin-bottom:4px}
 
 .base-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 0;border-top:1px solid rgba(255,255,255,.04)}.base-item>div,.record-actions{display:flex;gap:6px;flex-wrap:wrap}.danger{color:#ff8d91!important;border-color:#5b282c!important}.danger:hover{background:#281215!important;border-color:#e32222!important}@media(max-width:700px){.base-item{align-items:flex-start;flex-direction:column}.record-actions{justify-content:flex-end}}
+
+.cep-row{display:grid;grid-template-columns:1fr auto;gap:8px}.cep-row .cep-button{min-width:120px;background:#17191f;border:1px solid #343740;box-shadow:none}@media(max-width:520px){.cep-row{grid-template-columns:1fr}.cep-row .cep-button{width:100%}}
