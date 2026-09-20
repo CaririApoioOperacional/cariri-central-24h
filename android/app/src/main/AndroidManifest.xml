@@ -14,5 +14,6 @@
    </intent-filter>
   </activity>
   <service android:name=".LocationService" android:foregroundServiceType="location" android:exported="false"/>
+  <service android:name=".DispatchWatcher" android:exported="false"/>
  </application>
 </manifest>
