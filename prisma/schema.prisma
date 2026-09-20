@@ -97,6 +97,7 @@ model Technician {
   available Boolean @default(true)
   latitude Float?
   longitude Float?
+  locationUpdatedAt DateTime?
   dispatches Dispatch[]
   staff StaffUser?
   createdAt DateTime @default(now())
