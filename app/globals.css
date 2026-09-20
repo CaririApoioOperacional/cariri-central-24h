@@ -48,3 +48,32 @@ header{height:78px;padding-inline:clamp(18px,4vw,56px)}header .brand{flex:0 0 au
 .tech-live-location{margin:0 0 18px;padding:16px;border:1px solid #263c31;border-radius:14px;background:#0d1511;display:grid;gap:11px}.tech-live-location>div{display:flex;justify-content:space-between;gap:12px;align-items:center}.tech-live-location b{font-size:11px;letter-spacing:.8px;color:#82e0aa}.tech-live-location span{font-size:11px;color:#aeb8b2}.tech-live-location iframe{width:100%;height:280px;border:1px solid #29342e;border-radius:10px;background:#111}.tech-live-location .route-link{justify-content:center}.central-progress .mini{white-space:normal}@media(max-width:600px){.tech-live-location>div{align-items:flex-start;flex-direction:column}.tech-live-location iframe{height:230px}}
 
 .operations-map{margin:18px 0 26px;padding:18px;border:1px solid #28312d;border-radius:14px;background:#0d1110}.operations-map iframe{width:100%;height:360px;border:1px solid #303833;border-radius:11px}.map-tech-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin-top:10px}.map-tech-list a{display:flex;flex-direction:column;gap:3px;padding:11px;border:1px solid #2d3e35;border-radius:9px;background:#111914;color:#fff;text-decoration:none}.map-tech-list span{font-size:10px;color:#93a59b}@media(max-width:700px){.operations-map iframe{height:260px}}
+
+.print-only{display:none}
+@media print{
+ @page{size:A4 portrait;margin:9mm}
+ html,body{background:#fff!important;color:#111!important;font-size:10px}
+ body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .screen-only,.notice{display:none!important}
+ .print-only{display:flex!important}
+ .event-detail{background:#fff!important;min-height:0!important}
+ .event-detail section{max-width:none!important;margin:0!important;padding:0!important}
+ .report-brand{align-items:center;gap:12px;border-bottom:2px solid #c91522;padding-bottom:8px;margin-bottom:9px}
+ .report-brand img{width:62px;height:62px;object-fit:contain}
+ .report-brand div{display:flex;flex-direction:column;gap:3px}
+ .report-brand b{font-size:16px;color:#111}.report-brand span{font-size:9px;color:#555;letter-spacing:.5px}
+ .event-detail .eyebrow{font-size:8px;margin:0 0 2px;color:#b51220!important}
+ .event-detail h1{font-size:22px!important;line-height:1!important;margin:0 0 8px!important;color:#111!important}
+ .event-detail .grid{display:grid!important;grid-template-columns:1fr 1.35fr .7fr 1fr!important;gap:5px!important;margin:0 0 9px!important}
+ .event-detail .grid article{min-height:0!important;padding:7px!important;border:1px solid #bbb!important;background:#fff!important;border-radius:6px!important;break-inside:avoid}
+ .event-detail .grid article b{font-size:8px!important;color:#777!important}.event-detail .grid article span{font-size:9px!important;color:#111!important}.event-detail .grid article small{font-size:7px!important;color:#555!important}
+ .event-detail h2{font-size:11px!important;margin:8px 0 4px!important;color:#111!important}
+ .event-detail .timeline{display:grid!important;grid-template-columns:1fr 1fr!important;gap:3px 8px!important;margin:0!important}
+ .event-detail .time{display:grid!important;grid-template-columns:1.5fr .8fr auto!important;gap:4px!important;align-items:center!important;padding:3px 5px!important;border:1px solid #ddd!important;border-radius:4px!important;background:#fff!important;break-inside:avoid}
+ .event-detail .time b,.event-detail .time span,.event-detail .time small{font-size:7px!important;color:#222!important;margin:0!important}
+ .event-detail .list{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:5px!important}
+ .event-detail .list article{padding:6px!important;min-height:0!important;border:1px solid #bbb!important;background:#fff!important;border-radius:5px!important;break-inside:avoid}
+ .event-detail .list article b,.event-detail .list article span,.event-detail .list article small,.event-detail .list article a{font-size:7px!important;color:#222!important}
+ a[href]:after{content:""!important}
+ header,footer{display:none!important}
+}
