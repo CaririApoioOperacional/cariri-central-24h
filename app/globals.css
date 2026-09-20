@@ -77,3 +77,6 @@ header{height:78px;padding-inline:clamp(18px,4vw,56px)}header .brand{flex:0 0 au
  a[href]:after{content:""!important}
  header,footer{display:none!important}
 }
+
+/* Navegação e alertas operacionais */
+.app-nav{position:fixed;right:18px;bottom:18px;z-index:9999;display:flex;gap:7px;padding:7px;border:1px solid #353942;border-radius:14px;background:rgba(9,10,12,.94);box-shadow:0 10px 32px #0008;backdrop-filter:blur(10px)}.app-nav button{display:flex;align-items:center;gap:5px;min-width:72px;height:38px;justify-content:center;border:1px solid #353a44;border-radius:9px;background:#17191e;color:#fff;font-weight:900;cursor:pointer}.app-nav button:first-child{font-size:22px}.app-nav button:nth-child(2){font-size:22px}.app-nav button span{font-size:8px;letter-spacing:.5px}.app-nav button:hover{border-color:#e2222b;background:#211417}.live-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.sound-toggle{min-height:32px;padding:6px 10px;border:1px solid #454b55;border-radius:8px;background:#17191e;color:#ddd;font-size:9px;font-weight:900;cursor:pointer}.capture-warning .sound-toggle{margin-left:12px}@media(max-width:620px){.app-nav{right:10px;bottom:10px}.app-nav button{min-width:45px}.app-nav button span{display:none}}
