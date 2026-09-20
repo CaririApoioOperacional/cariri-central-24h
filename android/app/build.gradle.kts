@@ -6,8 +6,8 @@ android {
   applicationId="br.com.caririmonitoramento.central24h"
   minSdk=26
   targetSdk=35
-  versionCode=2
-  versionName="1.0.1" // atualização assistida oficial
+  versionCode=3
+  versionName="1.0.2" // identidade visual oficial CARIRI CENTRAL 24h
  }
  compileOptions { sourceCompatibility=JavaVersion.VERSION_17; targetCompatibility=JavaVersion.VERSION_17 }
  kotlinOptions { jvmTarget="17" }
