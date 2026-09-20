@@ -44,7 +44,7 @@ class MainActivity:AppCompatActivity(){
  }
  private fun startTrackingIfAllowed(){
   if(ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED)
-   ContextCompat.startForegroundService(this,Intent(this,LocationService::class.java)); startService(Intent(this,DispatchWatcher::class.java))
+   ContextCompat.startForegroundService(this,Intent(this,LocationService::class.java)); ContextCompat.startForegroundService(this,Intent(this,DispatchWatcher::class.java))
  }
  override fun onBackPressed(){if(web.canGoBack())web.goBack() else super.onBackPressed()}
  override fun onSaveInstanceState(out:Bundle){web.saveState(out);super.onSaveInstanceState(out)}
