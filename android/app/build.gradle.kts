@@ -12,7 +12,22 @@ android {
  compileOptions { sourceCompatibility=JavaVersion.VERSION_17; targetCompatibility=JavaVersion.VERSION_17 }
  kotlinOptions { jvmTarget="17" }
  buildFeatures { buildConfig=true }
- buildTypes { release { isMinifyEnabled=false; proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"),"proguard-rules.pro") } }
+ signingConfigs {
+  create("production") {
+   val keyPath=System.getenv("CARIRI_KEYSTORE_PATH")
+   if(!keyPath.isNullOrBlank()) storeFile=file(keyPath)
+   storePassword=System.getenv("CARIRI_KEYSTORE_PASSWORD")
+   keyAlias=System.getenv("CARIRI_KEY_ALIAS")
+   keyPassword=System.getenv("CARIRI_KEY_PASSWORD")
+  }
+ }
+ buildTypes {
+  release {
+   isMinifyEnabled=false
+   signingConfig=signingConfigs.getByName("production")
+   proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"),"proguard-rules.pro")
+  }
+ }
 }
 dependencies {
  implementation("androidx.core:core-ktx:1.15.0")
