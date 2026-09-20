@@ -1,0 +1,2 @@
+import {NextResponse} from "next/server";import {session} from "../../../../lib/auth";
+export async function GET(){const s=await session();if(!s)return NextResponse.json({authenticated:false},{status:401});return NextResponse.json({authenticated:true,id:s.id,name:s.name,email:s.email,role:s.role,home:s.role==="TECHNICIAN"?"/tecnico":s.role==="ADMIN"?"/admin":"/central"})}
