@@ -8,8 +8,8 @@ export async function POST(req:Request){
  if(["COMPLETED","CANCELLED"].includes(e.status))return NextResponse.json({error:"Atendimento já encerrado"},{status:409});
  const note=String(b.note||"").trim();
  if(b.action==="NOTE"){
-  if(note.length<3)return NextResponse.json({error:"Informe o andamento"},{status:400});
-  await prisma.audit.create({data:{eventId:e.id,action:"CENTRAL_PROGRESS: "+note,actor:s.name}});
+  if(!["CUSTOMER","ALARM","CAMERA","EQUIPMENT","OPERATOR"].includes(String(b.kind||"")))return NextResponse.json({error:"Selecione o tipo do andamento"},{status:400});
+  await prisma.audit.create({data:{eventId:e.id,action:"CENTRAL_PROGRESS: "+String(b.kind)+"|"+note,actor:s.name}});
   return NextResponse.json({ok:true});
  }
  if(b.action==="COMPLETE"){
