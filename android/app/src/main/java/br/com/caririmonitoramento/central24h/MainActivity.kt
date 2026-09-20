@@ -31,7 +31,7 @@ class MainActivity:AppCompatActivity(){
    }
    override fun onPageFinished(v:WebView?,url:String?){
     super.onPageFinished(v,url)
-    if(url?.contains("/tecnico")==true){requestOperationalPermissions()}else stopService(Intent(this@MainActivity,LocationService::class.java))
+    if(url?.contains("/tecnico")==true){requestOperationalPermissions()}else {stopService(Intent(this@MainActivity,LocationService::class.java));stopService(Intent(this@MainActivity,DispatchWatcher::class.java))}
    }
   }
   if(savedInstanceState==null)web.loadUrl("$base/login")
@@ -44,7 +44,7 @@ class MainActivity:AppCompatActivity(){
  }
  private fun startTrackingIfAllowed(){
   if(ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED)
-   ContextCompat.startForegroundService(this,Intent(this,LocationService::class.java))
+   ContextCompat.startForegroundService(this,Intent(this,LocationService::class.java)); startService(Intent(this,DispatchWatcher::class.java))
  }
  override fun onBackPressed(){if(web.canGoBack())web.goBack() else super.onBackPressed()}
  override fun onSaveInstanceState(out:Bundle){web.saveState(out);super.onSaveInstanceState(out)}
