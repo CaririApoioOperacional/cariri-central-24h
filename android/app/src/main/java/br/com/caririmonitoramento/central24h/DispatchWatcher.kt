@@ -12,7 +12,7 @@ import java.net.URL
 import java.util.concurrent.Executors
 
 class DispatchWatcher:Service(){
- companion object{const val CHANNEL="cariri_despachos"}
+ companion object{const val CHANNEL="cariri_despachos";const val SERVICE_CHANNEL="cariri_despachos_servico";const val SERVICE_ID=25}
  private val io=Executors.newSingleThreadExecutor()
  private var running=true
  private val known=mutableSetOf<String>()
@@ -20,6 +20,10 @@ class DispatchWatcher:Service(){
   super.onCreate()
   val nm=getSystemService(NotificationManager::class.java)
   nm.createNotificationChannel(NotificationChannel(CHANNEL,"Novos despachos",NotificationManager.IMPORTANCE_HIGH))
+  nm.createNotificationChannel(NotificationChannel(SERVICE_CHANNEL,"CARIRI Despachos",NotificationManager.IMPORTANCE_LOW))
+  val pi=PendingIntent.getActivity(this,25,Intent(this,MainActivity::class.java),PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+  val serviceNotification=NotificationCompat.Builder(this,SERVICE_CHANNEL).setSmallIcon(android.R.drawable.ic_popup_sync).setContentTitle("CARIRI CENTRAL 24h").setContentText("Monitorando novos despachos").setOngoing(true).setContentIntent(pi).build()
+  startForeground(SERVICE_ID,serviceNotification)
   io.execute{while(running){check();try{Thread.sleep(8000)}catch(_:Exception){}}}
  }
  private fun check(){
