@@ -20,30 +20,20 @@ jobs:
         with:
           gradle-version: '8.9'
       - name: Restore production signing key
-        if: ${{ secrets.CARIRI_ANDROID_KEYSTORE_BASE64 != '' }}
         env:
           KEYSTORE_B64: ${{ secrets.CARIRI_ANDROID_KEYSTORE_BASE64 }}
-        run: echo "$KEYSTORE_B64" | base64 --decode > app/cariri-production.jks
+        run: |
+          test -n "$KEYSTORE_B64"
+          echo "$KEYSTORE_B64" | base64 --decode > app/cariri-production.jks
       - name: Build signed production APK
-        if: ${{ secrets.CARIRI_ANDROID_KEYSTORE_BASE64 != '' }}
         env:
           CARIRI_KEYSTORE_PATH: cariri-production.jks
           CARIRI_KEYSTORE_PASSWORD: ${{ secrets.CARIRI_ANDROID_KEYSTORE_PASSWORD }}
           CARIRI_KEY_ALIAS: ${{ secrets.CARIRI_ANDROID_KEY_ALIAS }}
           CARIRI_KEY_PASSWORD: ${{ secrets.CARIRI_ANDROID_KEY_PASSWORD }}
         run: gradle assembleRelease
-      - name: Build test APK when signing is not configured
-        if: ${{ secrets.CARIRI_ANDROID_KEYSTORE_BASE64 == '' }}
-        run: gradle assembleDebug
       - uses: actions/upload-artifact@v4
-        if: ${{ secrets.CARIRI_ANDROID_KEYSTORE_BASE64 != '' }}
         with:
           name: CARIRI-CENTRAL-24h-PRODUCAO
           path: android/app/build/outputs/apk/release/app-release.apk
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ secrets.CARIRI_ANDROID_KEYSTORE_BASE64 == '' }}
-        with:
-          name: CARIRI-CENTRAL-24h-TESTE
-          path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
