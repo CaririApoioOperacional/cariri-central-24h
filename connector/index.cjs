@@ -1,0 +1,12 @@
+const {Client,LocalAuth}=require("whatsapp-web.js");
+const QRCode=require("qrcode");const http=require("node:http");const {timingSafeEqual}=require("node:crypto");
+const secret=process.env.WA_CONNECTOR_SECRET;const app=process.env.CARIRI_APP_URL;if(!secret||!app)throw Error("Configuração ausente");
+let status="initializing",qr=null;const client=new Client({authStrategy:new LocalAuth({dataPath:process.env.WA_SESSION_PATH||"/session"}),puppeteer:{headless:true,executablePath:"/usr/bin/chromium",args:["--no-sandbox","--disable-dev-shm-usage"]}});
+client.on("qr",async value=>{status="qr";qr=await QRCode.toDataURL(value)});
+client.on("authenticated",()=>{status="authenticated";qr=null});
+client.on("ready",()=>{status="ready";qr=null});
+client.on("auth_failure",()=>{status="offline";qr=null});
+client.on("disconnected",()=>{status="offline";qr=null;setTimeout(()=>process.exit(1),1000)});
+client.on("message",async m=>{try{if(m.fromMe||m.from.endsWith("@g.us")||m.from==="status@broadcast"||!m.body||m.type!=="chat")return;const contact=await m.getContact();const phone=contact.number;if(!phone)return;const r=await fetch(app+"/api/whatsapp/inbox",{method:"POST",headers:{Authorization:"Bearer "+secret,"Content-Type":"application/json"},body:JSON.stringify({id:m.id._serialized,phone,body:m.body}),signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error("Inbox HTTP "+r.status);const d=await r.json();if(d.reply)await m.reply(d.reply)}catch(e){console.error("Falha no processamento",e.message)}});
+http.createServer((req,res)=>{const a=Buffer.from(req.headers.authorization||""),b=Buffer.from("Bearer "+secret);if(a.length!==b.length||!timingSafeEqual(a,b)){res.writeHead(403);return res.end()}if(req.url!=="/status"){res.writeHead(404);return res.end()}res.writeHead(200,{"Content-Type":"application/json","Cache-Control":"no-store"});res.end(JSON.stringify({status,qr}))}).listen(Number(process.env.PORT||8080),"0.0.0.0");
+client.initialize().catch(e=>{console.error("Falha na inicialização",e.message);process.exit(1)});

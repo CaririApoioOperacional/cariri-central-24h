@@ -1,0 +1,1 @@
+{"name":"cariri-whatsapp-connector","private":true,"scripts":{"start":"node index.cjs"},"dependencies":{"whatsapp-web.js":"1.34.1","qrcode":"1.5.4"}}
