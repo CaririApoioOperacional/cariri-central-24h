@@ -19,7 +19,8 @@ export async function POST(req:Request){
    if(d){await tx.dispatch.update({where:{id:d.id},data:{status:"COMPLETED",completedAt:new Date()}});await tx.technician.update({where:{id:d.technicianId},data:{available:true}})}
    await tx.audit.create({data:{eventId:e.id,action:"CENTRAL_COMPLETED: "+result,actor:s.name}});
   });
-  return NextResponse.json({ok:true});
+  await notifyEvent(e.id,"COMPLETED");return NextResponse.json({ok:true});
  }
  return NextResponse.json({error:"Ação inválida"},{status:400});
 }
+import {notifyEvent} from "../../../../lib/waha";

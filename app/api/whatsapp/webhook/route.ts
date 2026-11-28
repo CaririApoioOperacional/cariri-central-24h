@@ -1,42 +1,7 @@
 import {NextResponse} from "next/server";
 import {createHmac,timingSafeEqual} from "crypto";
-
-const verifyToken=()=>process.env.WHATSAPP_VERIFY_TOKEN||"";
-const appSecret=()=>process.env.META_APP_SECRET||"";
-
-export async function GET(req:Request){
-  const u=new URL(req.url);
-  const mode=u.searchParams.get("hub.mode");
-  const token=u.searchParams.get("hub.verify_token");
-  const challenge=u.searchParams.get("hub.challenge");
-  if(mode==="subscribe"&&token&&challenge&&verifyToken()&&token===verifyToken()){
-    return new Response(challenge,{status:200,headers:{"Content-Type":"text/plain"}});
-  }
-  return NextResponse.json({error:"Verificação recusada"},{status:403});
-}
-
-export async function POST(req:Request){
-  const raw=await req.text();
-  const secret=appSecret();
-  if(secret){
-    const supplied=req.headers.get("x-hub-signature-256")||"";
-    const expected="sha256="+createHmac("sha256",secret).update(raw).digest("hex");
-    const a=Buffer.from(supplied),b=Buffer.from(expected);
-    if(a.length!==b.length||!timingSafeEqual(a,b)){
-      return NextResponse.json({error:"Assinatura inválida"},{status:401});
-    }
-  }
-  try{
-    const body=JSON.parse(raw);
-    // Nesta fase o endpoint confirma o recebimento oficial da Meta.
-    // Nenhum atendimento é criado ou despachado automaticamente.
-    // O processamento operacional será habilitado somente após vincular
-    // o número de produção e validar os contatos autorizados da CARIRI.
-    if(body?.object!=="whatsapp_business_account"){
-      return NextResponse.json({received:true,ignored:true});
-    }
-    return NextResponse.json({received:true});
-  }catch{
-    return NextResponse.json({error:"Payload inválido"},{status:400});
-  }
-}
+import {prisma} from "../../../../lib/prisma";
+import {sendTracked,phoneNumber,ackStatus} from "../../../../lib/waha";
+const categories:Record<string,string>={"1":"Solicitação do cliente","2":"Sinal de alarme","3":"Evento de câmera","4":"Evento de equipamento","5":"Apoio da Central"};
+const menu="CARIRI • CENTRAL 24h\nComo podemos ajudar?\n1 Solicitação do cliente\n2 Sinal de alarme\n3 Evento de câmera\n4 Evento de equipamento\n5 Apoio da Central";
+export async function POST(req:Request){const secret=process.env.CARIRI_WHATSAPP_HMAC;if(!secret)return NextResponse.json({error:"Indisponível"},{status:503});const raw=await req.text();const a=Buffer.from(req.headers.get("x-webhook-hmac")||""),b=Buffer.from(createHmac("sha512",secret).update(raw).digest("hex"));if(a.length!==b.length||!timingSafeEqual(a,b))return NextResponse.json({error:"Assinatura inválida"},{status:401});let d:any;try{d=JSON.parse(raw)}catch{return NextResponse.json({error:"JSON inválido"},{status:400});}if(d.session!=="default")return NextResponse.json({ignored:true});const m=d.payload||{};if(d.event==="message.ack"&&m.fromMe&&typeof m.id==="string"){const status=ackStatus(m.ack,m.ackName);const allowed:Record<string,string[]>={SERVER:["PENDING","SUBMITTED","UNKNOWN"],DELIVERED:["PENDING","SUBMITTED","UNKNOWN","SERVER"],READ:["PENDING","SUBMITTED","UNKNOWN","SERVER","DELIVERED"],FAILED:["PENDING","SUBMITTED","UNKNOWN","SERVER"]};if(allowed[status])await prisma.whatsAppOutgoing.updateMany({where:{externalId:m.id,status:{in:allowed[status]}},data:{status}});return NextResponse.json({ok:true});}if(d.event!=="message"||m.fromMe||typeof m.from!=="string"||!/^\d{10,15}@c\.us$/.test(m.from)||typeof m.id!=="string")return NextResponse.json({ignored:true});const phone=phoneNumber(m.from.split("@")[0]);const body=typeof m.body==="string"&&m.body.trim()?m.body.slice(0,4000):"[Mensagem não textual — verificar no WhatsApp]";const category=categories[body.trim()]||null;const contacts=await prisma.whatsAppContact.findMany({where:{authorized:true,customer:{active:true}},include:{customer:{include:{sites:true}}}});const matches=contacts.filter(c=>phoneNumber(c.phone)===phone);const c=matches.length===1?matches[0]:null;const siteId=c?.siteId&&c.customer.sites.some(s=>s.id===c.siteId)?c.siteId:c?.customer.sites.length===1?c.customer.sites[0].id:null;const prior=await prisma.whatsAppInbox.findFirst({where:{phone},orderBy:{createdAt:"desc"}});try{await prisma.whatsAppInbox.create({data:{externalId:m.id,phone,body,category,contactName:c?c.name||c.customer.name:null,siteId}})}catch(e:any){if(e?.code==="P2002")return NextResponse.json({ok:true,duplicate:true});throw e;}let reply:string|null=null;if(category)reply="CARIRI • CENTRAL 24h\nRecebemos sua seleção: "+category+". Informe os detalhes e o estabelecimento. A Central fará a análise. Nenhum despacho foi confirmado.";else if(!prior||Date.now()-prior.createdAt.getTime()>86400000)reply=c?menu:menu+"\nInforme seu nome e estabelecimento para validação.";if(reply)await sendTracked(phone,reply,"reply:"+m.id);return NextResponse.json({ok:true});}
