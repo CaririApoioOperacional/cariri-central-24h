@@ -169,6 +169,7 @@ model WhatsAppInbox {
  eventId String?
 }
 model WhatsAppOutgoing {
+ dispatchId String?
  chatId String?
  id String @id @default(cuid())
  dedupKey String @unique
