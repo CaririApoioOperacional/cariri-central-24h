@@ -189,3 +189,16 @@ model WhatsAppTemplate {
  updatedBy String?
  updatedAt DateTime @updatedAt
 }
+
+model GuardianSnapshot {
+ id String @id
+ observedAt DateTime
+ receivedAt DateTime @updatedAt
+ payload Json
+}
+model GuardianDeviceLink {
+ externalId String @id
+ siteId String
+ updatedBy String
+ updatedAt DateTime @updatedAt
+}
