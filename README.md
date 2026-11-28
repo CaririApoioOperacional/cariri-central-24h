@@ -31,3 +31,6 @@ O modelo `StaffUser` foi reservado para autenticação e RBAC de ADMIN, CENTRAL,
 
 ## WhatsApp Business
 A operação usa o WhatsApp Web oficial como dispositivo vinculado ao número Business. O sistema apenas prepara links e textos para conversas; não lê a sessão, não automatiza cliques e não usa bibliotecas não oficiais para controlar o WhatsApp Web. O operador confirma o envio no próprio WhatsApp.
+
+## Endereço oficial
+https://cariri24h.up.railway.app/

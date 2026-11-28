@@ -20,7 +20,7 @@ import java.util.concurrent.Executors
 
 class MainActivity:AppCompatActivity(){
  private lateinit var web:WebView
- private val base="https://cariri-central-24h-production.up.railway.app"
+ private val base="https://cariri24h.up.railway.app"
  private val io=Executors.newSingleThreadExecutor()
  private val permissions=registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){ startTrackingIfAllowed() }
 
@@ -35,7 +35,7 @@ class MainActivity:AppCompatActivity(){
   web.webViewClient=object:WebViewClient(){
    override fun shouldOverrideUrlLoading(v:WebView?,r:WebResourceRequest?):Boolean{
     val u=r?.url?:return false
-    if(u.scheme=="https"&&u.host=="cariri-central-24h-production.up.railway.app")return false
+    if(u.scheme=="https"&&u.host=="cariri24h.up.railway.app")return false
     startActivity(Intent(Intent.ACTION_VIEW,u));return true
    }
    override fun onPageFinished(v:WebView?,url:String?){

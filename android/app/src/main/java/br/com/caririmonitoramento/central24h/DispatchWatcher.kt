@@ -28,9 +28,9 @@ class DispatchWatcher:Service(){
  }
  private fun check(){
   try{
-   val c=URL("https://cariri-central-24h-production.up.railway.app/api/dispatches").openConnection() as HttpURLConnection
+   val c=URL("https://cariri24h.up.railway.app/api/dispatches").openConnection() as HttpURLConnection
    c.connectTimeout=10000;c.readTimeout=10000
-   val cookie=CookieManager.getInstance().getCookie("https://cariri-central-24h-production.up.railway.app")?:return
+   val cookie=CookieManager.getInstance().getCookie("https://cariri24h.up.railway.app")?:return
    c.setRequestProperty("Cookie",cookie)
    if(c.responseCode!=200)return
    val a=JSONArray(c.inputStream.bufferedReader().readText())
