@@ -2,6 +2,7 @@ import {Prisma} from "@prisma/client";
 import {prisma} from "./prisma";
 import {distanceKm,freshPosition,validCoordinates,GPS_FRESH_MS} from "./proximity";
 import {notifyEvent,phoneNumber} from "./waha";
+import {loadTemplates,renderTemplate} from "./whatsapp-templates";
 export class DispatchError extends Error {}
 export async function assignDispatch(eventId:string,technicianId:string|null,actor:string){
  const automatic=!technicianId;
@@ -20,8 +21,9 @@ export async function assignDispatch(eventId:string,technicianId:string|null,act
  const d=await tx.dispatch.create({data:{eventId,technicianId:selected.t.id}});
  await tx.audit.create({data:{eventId,action:(automatic?"DISPATCH_AUTO: ":"DISPATCH_SENT: ")+selected.t.name+(selected.km!==null?" • "+selected.km.toFixed(2)+" km em linha reta":""),actor}});
  const phone=phoneNumber(selected.t.phone||"");
- if(/^\d{12,15}$/.test(phone)){await tx.whatsAppOutgoing.create({data:{dispatchId:d.id,eventId,phone,dedupKey:"dispatch:"+d.id,body:"CARIRI • CENTRAL 24h\nNovo acionamento: "+e.protocol+"\nAcesse seu aplicativo operacional para consultar os detalhes e aceitar o atendimento.\nhttps://cariri24h.up.railway.app/tecnico",status:"PENDING"}});}
- else await tx.audit.create({data:{eventId,action:"WHATSAPP_TECNICO_SEM_NUMERO_VALIDO",actor}});
+ const message=renderTemplate(await loadTemplates(tx),"TECHNICIAN",{protocolo:e.protocol});
+ if(message&&/^\d{12,15}$/.test(phone)){await tx.whatsAppOutgoing.create({data:{dispatchId:d.id,eventId,phone,dedupKey:"dispatch:"+d.id,body:message,status:"PENDING"}});}
+ else if(message)await tx.audit.create({data:{eventId,action:"WHATSAPP_TECNICO_SEM_NUMERO_VALIDO",actor}});
  return {...d,technicianName:selected.t.name,distanceKm:selected.km};
  },{isolationLevel:Prisma.TransactionIsolationLevel.Serializable});
  if(assigned)await notifyEvent(eventId,"DISPATCHED");return assigned;
