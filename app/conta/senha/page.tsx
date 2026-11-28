@@ -1,0 +1,2 @@
+import {session} from "../../../lib/auth";import {redirect} from "next/navigation";import PasswordForm from "./PasswordForm";
+export default async function Page(){const s=await session();if(!s)redirect("/login");return <main><section><p className="eyebrow">SEGURANÇA DA CONTA</p><h1>Alterar senha</h1><p>{s.name} • {s.email}</p><PasswordForm/></section></main>}
