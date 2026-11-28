@@ -1,0 +1,3 @@
+import {spawn} from "node:child_process";
+const app=spawn(process.execPath,["node_modules/next/dist/bin/next","start","-H","0.0.0.0","-p",process.env.PORT||"3000"],{stdio:"inherit"});
+const worker=spawn(process.execPath,["scripts/whatsapp-worker.mjs"],{stdio:"inherit"});let stopping=false;function stop(code=0){if(stopping)return;stopping=true;app.kill("SIGTERM");worker.kill("SIGTERM");setTimeout(()=>process.exit(code),2000).unref();}app.on("exit",code=>stop(code||1));worker.on("exit",code=>stop(code||1));process.on("SIGTERM",()=>stop());process.on("SIGINT",()=>stop());

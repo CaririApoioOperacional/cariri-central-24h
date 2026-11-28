@@ -9,7 +9,7 @@ export async function POST(req:Request){
  const note=String(b.note||"").trim();
  if(b.action==="NOTE"){
   if(!["CUSTOMER","ALARM","CAMERA","EQUIPMENT","OPERATOR"].includes(String(b.kind||"")))return NextResponse.json({error:"Selecione o tipo do andamento"},{status:400});
-  await prisma.audit.create({data:{eventId:e.id,action:"CENTRAL_PROGRESS: "+String(b.kind)+"|"+note,actor:s.name}});
+  const audit=await prisma.audit.create({data:{eventId:e.id,action:"CENTRAL_PROGRESS: "+String(b.kind)+"|"+note,actor:s.name}});await notifyEvent(e.id,"PROGRESS",audit.id);
   return NextResponse.json({ok:true});
  }
  if(b.action==="COMPLETE"){
