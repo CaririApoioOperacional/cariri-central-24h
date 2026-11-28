@@ -1,1 +1,10 @@
-"use client";import {usePathname,useRouter} from "next/navigation";export default function AppNavigation(){const r=useRouter(),p=usePathname();if(p==="/login")return null;const home=()=>r.push(p.startsWith("/conta")?"/":p.startsWith("/tecnico")?"/tecnico":"/central");return <nav className="app-nav screen-only" aria-label="Navegação"><button className="nav-back" onClick={()=>r.back()} title="Voltar"><i>‹</i><span><b>VOLTAR</b><small>PÁGINA ANTERIOR</small></span></button><button className="nav-home" onClick={home} title="Tela inicial"><i>⌂</i><span><b>HOME</b><small>TELA INICIAL</small></span></button><button className="nav-next" onClick={()=>r.forward()} title="Próximo"><span><b>PRÓXIMO</b><small>PRÓXIMA PÁGINA</small></span><i>›</i></button><button onClick={()=>r.push("/conta/senha")} title="Alterar senha"><span><b>ALTERAR SENHA</b><small>MINHA CONTA</small></span></button></nav>}
+"use client";
+import Link from "next/link";
+import {usePathname} from "next/navigation";
+import {useEffect,useState} from "react";
+export default function AppNavigation(){
+ const p=usePathname();const [role,setRole]=useState<string|null>(null);
+ useEffect(()=>{let live=true;setRole(null);if(p==="/login")return;fetch("/api/auth/session",{cache:"no-store"}).then(async r=>r.ok?await r.json():null).then(s=>{if(live)setRole(s?.role||null)}).catch(()=>{});return()=>{live=false}},[p]);
+ if(p==="/login"||!role||role==="TECHNICIAN"||!["ADMIN","CENTRAL","SUPERVISOR"].includes(role))return null;
+ return <nav className="app-nav screen-only" aria-label="Módulos principais">{role==="ADMIN"&&<Link href="/admin" className={p.startsWith("/admin")?"nav-active":""} aria-current={p.startsWith("/admin")?"page":undefined}>ADM</Link>}<Link href="/central" className={p.startsWith("/central")?"nav-active":""} aria-current={p.startsWith("/central")?"page":undefined}>CENTRAL 24H</Link></nav>;
+}
